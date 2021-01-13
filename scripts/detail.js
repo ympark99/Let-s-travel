@@ -44,6 +44,35 @@ function getDetail(id){
         Galleria.run('#detail-images');
 
         showMarker(r.position.x,r.position.y);
+
+        $('.btn-register').click(function(){ // 쿠키에 여행지 저장
+            var myTrips = Cookies.getJSON('MYTRIPS');
+            var overlap = 0;
+            if(!myTrips)
+                myTrips = [];
+            console.log(myTrips);
+            for(var j=0; j< myTrips.length; j++){
+                var checkId = myTrips[j];
+                if(r.id == checkId.id){
+                    overlap = 1; // 이미 등록된 경우 등록 x
+                }
+                console.log('r.id ='+r.id);
+                console.log('check.id ='+ checkId.id);
+            }
+
+            if(overlap === 1) alert('이미 등록된 장소입니다.');
+            else{
+            myTrips.push({
+                id: id,
+                name : r.name,
+                cityName : r.cityName,
+                x: r.position.x,
+                y:r.position.y
+            });
+            Cookies.set('MYTRIPS',myTrips);
+            alert('여행지가 등록되었습니다!');
+            }
+        });
     });
 }
 
@@ -58,7 +87,6 @@ function showMap(){
 }
 
 function showMarker(lat, lng){
-
     var pos = {
         lat : lat,
         lng : lng
